@@ -229,6 +229,7 @@
 
   <!-- CONTENEDOR PRINCIPAL -->
   <main class="relative z-10 max-w-3xl mx-auto px-4 py-6 w-full flex-grow flex flex-col justify-center my-auto">
+    <div id="storage-status" role="status" aria-live="polite" class="hidden mb-4 p-3 rounded-xl bg-amber-100 text-amber-900 text-sm border border-amber-300"></div>
 
     <!-- ESTADO BLOQUEADO (SI YA RESPONDIÓ) -->
     <section id="locked-state-view" class="hidden space-y-6 text-center my-auto">
@@ -237,13 +238,13 @@
           💖✨
         </div>
         <h1 class="font-romantic text-5xl md:text-7xl text-crimsonRed">
-          ¡Experiencia ya completada!
+          ¡Eres lo mejor, mi amor mío!
         </h1>
         <p class="text-slate-700 text-base md:text-lg max-w-md mx-auto leading-relaxed font-medium" id="locked-message-text">
           Esta hermosa respuesta ya ha quedado guardada en nuestro corazoncito. Gracias por decir que sí. 🥰
         </p>
         <div class="pt-2 text-xs text-rose-700">
-          <i class="fas fa-shield-alt"></i> Respuesta asegurada en el sistema.
+          <i class="fas fa-heart"></i> Respuesta guardada en el corazón.
         </div>
       </div>
     </section>
@@ -359,7 +360,7 @@
 
         <div id="quiz-box" class="bg-white/90 p-6 rounded-2xl border border-pink-200 shadow-sm space-y-4">
           <div class="flex justify-between items-center text-xs text-rose-800 font-semibold">
-            <span id="quiz-counter">Pregunta 1 de 2</span>
+            <span id="quiz-counter">Pregunta 1 de 6</span>
             <span class="bg-pink-100 px-2.5 py-0.5 rounded-full text-crimsonRed">Desafío de Amor</span>
           </div>
           
@@ -450,11 +451,11 @@
           <span class="text-6xl md:text-7xl">🎉👩‍❤️‍💋‍👨</span>
         </div>
         <div class="space-y-4">
-          <h1 class="font-romantic text-5xl md:text-7xl text-crimsonRed leading-tight drop-shadow-md">
-            ¡SABÍA QUE DIRÍAS QUE SÍ! ❤️
+          <h1 class="font-sans font-bold text-3xl md:text-5xl leading-tight text-crimsonRed">
+            ¡Sabía que dirías que sí! ❤️
           </h1>
           <p class="text-lg md:text-2xl text-rose-900 font-bold max-w-lg mx-auto leading-relaxed">
-            Hoy empieza el capítulo más hermoso de nuestras vidas. ¡Gracias por hacerme el más feliz del mundo! 🥰✨
+            Hoy empieza el capítulo más hermoso de nuestras vidas. <br> ¡Gracias por hacerme el hombre más feliz del mundo! 🥰✨
           </p>
         </div>
 
@@ -465,7 +466,7 @@
 
         <div class="glass-card p-6 rounded-2xl max-w-md mx-auto space-y-3 border border-pink-200">
           <p class="text-slate-700 text-sm italic font-serif">"Prometo amarte, respetarte y llenarte de detalles bonitos cada día."</p>
-          <div class="text-crimsonRed font-bold text-base" id="save-status-msg">¡Respuesta guardada con éxito en el sistema! ☁️✨</div>
+          <div class="text-crimsonRed font-bold text-base" id="save-status-msg">Guardando respuesta...</div>
         </div>
 
         <div class="pt-4 flex justify-center items-center">
@@ -478,24 +479,30 @@
 
   </main>
 
-  <!-- MODAL DE ACCESO ADMIN (Token protegido) -->
+  <!-- MODAL DE ACCESO ADMIN -->
   <div id="admin-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
     <div class="glass-card p-6 md:p-8 rounded-3xl shadow-2xl max-w-md w-full space-y-4 border border-pink-200 bg-white">
       <div class="flex justify-between items-center">
-        <h3 class="font-bold text-lg text-crimsonRed flex items-center gap-2"><i class="fas fa-lock"></i> Panel Secreto del Creador</h3>
+        <h3 class="font-bold text-lg text-crimsonRed flex items-center gap-2"><i class="fas fa-lock"></i> Panel del Creador</h3>
         <button onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-600"><i class="fas fa-times text-lg"></i></button>
       </div>
 
       <div id="admin-login-form" class="space-y-4">
-        <p class="text-xs text-slate-600">Introduce tu token secreto de administrador para ver las respuestas de ella:</p>
-        <input type="password" id="admin-token-input" placeholder="Token Secreto (ej. GREGORY2026)" class="w-full px-4 py-3 rounded-xl border border-pink-200 focus:outline-none focus:border-crimsonRed text-sm">
+        <p class="text-xs text-slate-600">Introduce el token para ver los datos guardados en este navegador:</p>
+        <input type="password" id="admin-token-input" placeholder="Token de acceso" class="w-full px-4 py-3 rounded-xl border border-pink-200 focus:outline-none focus:border-crimsonRed text-sm">
         <button onclick="verifyAdminToken()" class="w-full py-3 bg-gradient-to-r from-deepRose to-crimsonRed text-white font-bold rounded-xl shadow-md text-sm">Ingresar al Panel</button>
       </div>
 
       <div id="admin-dashboard-content" class="hidden space-y-4">
+        <p class="text-xs text-slate-600">Los datos son locales a este navegador. Exporta el JSON para respaldarlo o impórtalo en otro dispositivo.</p>
         <div class="bg-pink-50 p-4 rounded-xl border border-pink-200 space-y-2 max-h-64 overflow-y-auto">
           <h4 class="text-xs font-bold uppercase tracking-wider text-crimsonRed">Registro JSON Almacenado:</h4>
           <pre id="json-data-view" class="text-xs text-slate-700 font-mono whitespace-pre-wrap bg-white p-3 rounded-lg border border-pink-100">Cargando...</pre>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="exportResponseData()" class="flex-1 py-2.5 bg-pink-100 text-crimsonRed text-xs font-bold rounded-xl">Exportar JSON</button>
+          <button onclick="document.getElementById('json-import').click()" class="flex-1 py-2.5 bg-pink-100 text-crimsonRed text-xs font-bold rounded-xl">Importar JSON</button>
+          <input id="json-import" type="file" accept=".json,application/json" class="hidden" onchange="importResponseData(this)">
         </div>
         <div class="flex gap-2 pt-2">
           <button onclick="resetSystemState()" class="flex-1 py-2.5 bg-rose-100 hover:bg-rose-200 text-crimsonRed text-xs font-bold rounded-xl border border-rose-300">Reiniciar Estado (Pruebas)</button>
@@ -504,138 +511,6 @@
       </div>
     </div>
   </div>
-
-  <!-- SCRIPT FIREBASE Y LÓGICA DE PERSISTENCIA -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    // Variables globales de entorno Firebase
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'romantic-proposal-app-default';
-    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-      apiKey: "demo-key", authDomain: "demo.firebaseapp.com", projectId: "demo-project"
-    };
-
-    let db, auth, userId;
-    const SECRET_ADMIN_TOKEN = "GREGORY2026"; // Token secreto para verificar en el panel
-
-    // Inicializar Firebase
-    async function initFirebase() {
-      try {
-        const app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
-
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
-        } else {
-          await signInAnonymously(auth);
-        }
-
-        userId = auth.currentUser ? auth.currentUser.uid : 'guest-user';
-        
-        // Verificar si ya completó el flujo previamente
-        checkIfAlreadyCompleted();
-      } catch (e) {
-        console.log("Modo local o error de conexión Firebase:", e);
-      }
-    }
-
-    // Ruta en Firestore según regla estricta: /artifacts/{appId}/public/data/response
-    async function checkIfAlreadyCompleted() {
-      if (!db) return;
-      try {
-        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'proposal_response');
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          if (data && data.completed) {
-            lockAppUI(data);
-          }
-        }
-      } catch (err) {
-        console.log("Error verificando estado:", err);
-      }
-    }
-
-    window.saveResponseToCloud = async function(quizScore) {
-      if (!db) return;
-      try {
-        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'proposal_response');
-        const responseData = {
-          completed: true,
-          answer: "¡SÍ, QUIERO!",
-          timestamp: new Date().toISOString(),
-          quizScore: quizScore || "Completado",
-          userAgent: navigator.userAgent
-        };
-        await setDoc(docRef, responseData);
-        console.log("Respuesta guardada con éxito.");
-      } catch (err) {
-        console.error("Error al guardar en Firestore:", err);
-      }
-    }
-
-    window.fetchResponseDataForAdmin = async function() {
-      if (!db) return "No hay conexión a la base de datos.";
-      try {
-        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'proposal_response');
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          return JSON.stringify(docSnap.data(), null, 2);
-        } else {
-          return JSON.stringify({ message: "Aún no hay respuestas guardadas en el sistema." }, null, 2);
-        }
-      } catch (err) {
-        return JSON.stringify({ error: err.message }, null, 2);
-      }
-    }
-
-    window.clearResponseDataInCloud = async function() {
-      if (!db) return;
-      try {
-        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'proposal_response');
-        await deleteDoc(docRef);
-        alert("Estado reiniciado con éxito. La página se recargará.");
-        location.reload();
-      } catch (err) {
-        console.error("Error al limpiar:", err);
-      }
-    }
-
-    // Comprobar si se abrió el panel con el token en la URL (ej: ?token=GREGORY2026)
-    window.addEventListener('DOMContentLoaded', () => {
-      initFirebase();
-      const urlParams = new URLSearchParams(window.location.search);
-      const tokenParam = urlParams.get('token');
-      if (tokenParam === SECRET_ADMIN_TOKEN) {
-        setTimeout(() => {
-          openAdminModal();
-          document.getElementById('admin-token-input').value = SECRET_ADMIN_TOKEN;
-          verifyAdminToken();
-        }, 1000);
-      }
-    });
-
-    window.verifyAdminToken = async function() {
-      const inputVal = document.getElementById('admin-token-input').value.trim();
-      if (inputVal === SECRET_ADMIN_TOKEN) {
-        document.getElementById('admin-login-form').classList.add('hidden');
-        document.getElementById('admin-dashboard-content').classList.remove('hidden');
-        const jsonText = await fetchResponseDataForAdmin();
-        document.getElementById('json-data-view').innerText = jsonText;
-      } else {
-        alert("Token incorrecto. Solo el creador puede acceder.");
-      }
-    }
-
-    window.resetSystemState = function() {
-      if (confirm("¿Estás seguro de reiniciar el estado para volver a probar?")) {
-        clearResponseDataInCloud();
-      }
-    }
-  </script>
 
   <!-- LÓGICA GENERAL DE LA APP -->
   <script>
@@ -671,21 +546,197 @@
       {
         question: "¿Dónde o cómo fue nuestra primera cita inolvidable?",
         options: ["En un café conversando horas", "Paseando en el parque", "Viendo una película", "Comiendo nuestro platillo favorito"],
-        correctIndex: 0,
-        sweetResponse: "¡Exacto! Ese día supe que quería estar contigo siempre. ❤️"
+        sweetResponse: "Ese día fue el inicio de una historia muy especial. ❤️"
       },
       {
         question: "¿Quién sonrió primero cuando nos vimos por primera vez?",
         options: ["Tú con tu sonrisa hermosa", "Yo todo nervioso", "Los dos al mismo tiempo", "Fue amor a primera vista"],
-        correctIndex: 2,
-        sweetResponse: "¡Sí! Hubo una conexión mágica instantánea. ✨"
+        sweetResponse: "¡Qué bonito recordar aquel primer encuentro! ✨"
+      },
+      {
+        question: "¿Qué plan te gustaría disfrutar juntos un fin de semana?",
+        options: ["Una cena especial", "Un paseo al aire libre", "Una tarde de películas", "Una aventura improvisada"],
+        sweetResponse: "¡Cualquier plan es especial si lo compartimos! 💕"
+      },
+      {
+        question: "¿Qué detalle te hace sentir más querida?",
+        options: ["Un abrazo sincero", "Una carta bonita", "Pasar tiempo juntos", "Una sorpresa inesperada"],
+        sweetResponse: "Me encanta saber qué detalles alegran tu corazón. 💌"
+      },
+      {
+        question: "¿Qué lugar te gustaría conocer conmigo?",
+        options: ["Una playa tranquila", "Un pueblo encantador", "Una montaña con vistas", "Una ciudad llena de historias"],
+        sweetResponse: "¡Ojalá podamos crear recuerdos en ese lugar! 🌍"
+      },
+      {
+        question: "¿Qué es lo que más disfrutas de nuestros momentos juntos?",
+        options: ["Las risas que compartimos", "Nuestras conversaciones", "Los abrazos", "Descubrir cosas nuevas juntos"],
+        sweetResponse: "Cada momento a tu lado es un regalo. ❤️"
       }
     ];
 
+    const STORAGE_KEY = 'mi-negrita-progress-v1';
+    const SECRET_ADMIN_TOKEN = 'GREGORY2026';
+    const emptyProgress = () => ({
+      version: 1,
+      currentStep: 1,
+      currentQuizIndex: 0,
+      answers: Array(triviaQuestions.length).fill(null),
+      completed: false,
+      answer: null,
+      timestamp: null,
+      updatedAt: null
+    });
+    let progress = emptyProgress();
+    let invalidStoredData = null;
     let currentStep = 1;
     let currentQuizIndex = 0;
     let noClickCount = 0;
     let yesScale = 1;
+
+    function validateProgress(data) {
+      return data && data.version === 1 &&
+        Number.isInteger(data.currentStep) && data.currentStep >= 1 && data.currentStep <= 5 &&
+        Number.isInteger(data.currentQuizIndex) && data.currentQuizIndex >= 0 && data.currentQuizIndex < triviaQuestions.length &&
+        Array.isArray(data.answers) && data.answers.length === triviaQuestions.length &&
+        data.answers.every((answer, index) => answer === null ||
+          (answer && Number.isInteger(answer.optionIndex) &&
+            answer.optionIndex >= 0 && answer.optionIndex < triviaQuestions[index].options.length &&
+            answer.question === triviaQuestions[index].question &&
+            answer.answer === triviaQuestions[index].options[answer.optionIndex])) &&
+        typeof data.completed === 'boolean' &&
+        (data.updatedAt === null || (typeof data.updatedAt === 'string' && !Number.isNaN(Date.parse(data.updatedAt)))) &&
+        (data.completed
+          ? data.answer === '¡SÍ, QUIERO!' && typeof data.timestamp === 'string' && !Number.isNaN(Date.parse(data.timestamp))
+          : data.answer === null && data.timestamp === null);
+    }
+
+    function showStorageWarning(message) {
+      const status = document.getElementById('storage-status');
+      status.textContent = message;
+      status.classList.remove('hidden');
+    }
+
+    function refreshAdminData() {
+      document.getElementById('json-data-view').textContent = invalidStoredData === null
+        ? JSON.stringify(progress, null, 2)
+        : invalidStoredData;
+    }
+
+    function saveProgress() {
+      progress.currentStep = currentStep;
+      progress.currentQuizIndex = currentQuizIndex;
+      progress.updatedAt = new Date().toISOString();
+      refreshAdminData();
+      if (invalidStoredData !== null) {
+        showStorageWarning('Los datos guardados no son válidos. Exporta el contenido desde el panel antes de reiniciar o importar otro respaldo.');
+        return false;
+      }
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+        document.getElementById('storage-status').classList.add('hidden');
+        return true;
+      } catch (error) {
+        console.error('No se pudo guardar el progreso local:', error);
+        showStorageWarning('No se pudo guardar en este navegador. Exporta el JSON desde el panel antes de cerrar la página.');
+        return false;
+      }
+    }
+
+    function restoreProgress() {
+      let raw;
+      try {
+        raw = localStorage.getItem(STORAGE_KEY);
+      } catch (error) {
+        console.error('No se pudo leer el progreso local:', error);
+        showStorageWarning('No se pudo acceder al almacenamiento local. Exporta el JSON desde el panel antes de cerrar la página.');
+        return;
+      }
+      if (raw === null) return;
+      try {
+        const saved = JSON.parse(raw);
+        if (!validateProgress(saved)) throw new Error('Formato de progreso no reconocido');
+        progress = saved;
+      } catch (error) {
+        console.error('No se pudo interpretar el progreso guardado:', error);
+        invalidStoredData = raw;
+        showStorageWarning('Los datos guardados no son válidos. Exporta el contenido desde el panel antes de reiniciar o importar otro respaldo.');
+        return;
+      }
+      currentStep = progress.currentStep;
+      currentQuizIndex = progress.currentQuizIndex;
+      if (progress.completed) {
+        lockAppUI(progress);
+      } else {
+        document.getElementById('step-1').classList.add('hidden');
+        document.getElementById(`step-${currentStep}`).classList.remove('hidden');
+        updateProgressBar(currentStep);
+        if (currentStep === 3) loadQuizQuestion(currentQuizIndex);
+      }
+    }
+
+    function verifyAdminToken() {
+      if (document.getElementById('admin-token-input').value.trim() !== SECRET_ADMIN_TOKEN) {
+        alert('Token incorrecto.');
+        return;
+      }
+      document.getElementById('admin-login-form').classList.add('hidden');
+      document.getElementById('admin-dashboard-content').classList.remove('hidden');
+      refreshAdminData();
+    }
+
+    function exportResponseData() {
+      const content = invalidStoredData === null ? JSON.stringify(progress, null, 2) : invalidStoredData;
+      const url = URL.createObjectURL(new Blob([content], { type: 'application/json' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'mi-negrita-progreso.json';
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    async function importResponseData(input) {
+      const file = input.files[0];
+      if (!file) return;
+      try {
+        const data = JSON.parse(await file.text());
+        if (!validateProgress(data)) throw new Error('El archivo no contiene un progreso compatible.');
+        if (!confirm('La importación reemplazará los datos locales actuales. ¿Continuar?')) return;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        location.reload();
+      } catch (error) {
+        console.error('No se pudo importar el archivo:', error);
+        alert(`No se pudo importar el JSON: ${error.message}`);
+      } finally {
+        input.value = '';
+      }
+    }
+
+    function resetSystemState() {
+      if (!confirm('Se borrarán los datos de este navegador. ¿Deseas reiniciar?')) return;
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+      } catch (error) {
+        console.error('No se pudo reiniciar el estado:', error);
+        alert('No se pudo borrar el estado local. Revisa los permisos del navegador.');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      restoreProgress();
+      if (new URLSearchParams(location.search).get('token') === SECRET_ADMIN_TOKEN) {
+        openAdminModal();
+        document.getElementById('admin-token-input').value = SECRET_ADMIN_TOKEN;
+        verifyAdminToken();
+      }
+    });
+    window.addEventListener('storage', event => {
+      if (event.key === STORAGE_KEY || event.key === null) {
+        alert('Los datos locales cambiaron en otra pestaña. La página se actualizará.');
+        location.reload();
+      }
+    });
 
     const stepTitles = {
       1: "Nuestro Inicio ✨",
@@ -707,7 +758,7 @@
       const lockedView = document.getElementById('locked-state-view');
       lockedView.classList.remove('hidden');
       document.getElementById('locked-message-text').innerText = 
-        `¡Esta experiencia ya fue completada con éxito! Fecha de respuesta: ${new Date(savedData.timestamp).toLocaleString()}. Gracias por decir que sí. ❤️`;
+        `¡Eres increíble el amor de mi vida Mi negrita hermosha!  Gracias por decir que sí. ❤️ \n Fecha de aceptación: ${new Date(savedData.timestamp).toLocaleString()}.`;
     }
 
     function updateProgressBar(step) {
@@ -725,12 +776,16 @@
       }
     }
 
+    let changingStep = false;
     function nextStep(targetStep) {
       const currentEl = document.getElementById(`step-${currentStep}`);
       const targetEl = document.getElementById(`step-${targetStep}`);
 
-      if (!currentEl || !targetEl) return;
+      if (!currentEl || !targetEl || changingStep) return;
 
+      changingStep = true;
+      currentStep = targetStep;
+      saveProgress();
       currentEl.classList.add('opacity-0', 'scale-95');
       setTimeout(() => {
         currentEl.classList.add('hidden');
@@ -739,12 +794,12 @@
           targetEl.classList.remove('opacity-0', 'scale-95');
         }, 50);
 
-        currentStep = targetStep;
         updateProgressBar(targetStep);
 
         if (targetStep === 3) {
-          loadQuizQuestion(0);
+          loadQuizQuestion(currentQuizIndex);
         }
+        changingStep = false;
       }, 400);
     }
 
@@ -772,16 +827,31 @@
         const btn = document.createElement('button');
         btn.className = "w-full text-left p-3.5 rounded-xl border border-pink-200 bg-white hover:bg-pink-50 text-slate-700 font-medium text-xs md:text-sm transition-all shadow-sm flex items-center justify-between group";
         btn.innerHTML = `<span>${opt}</span> <i class="fas fa-heart text-pink-200 group-hover:text-deepRose transition-colors"></i>`;
-        btn.onclick = () => selectQuizOption(idx, btn);
+        btn.onclick = () => selectQuizOption(idx);
         optionsBox.appendChild(btn);
       });
+      const savedAnswer = progress.answers[index];
+      if (savedAnswer !== null) {
+        showQuizSelection(savedAnswer.optionIndex);
+      }
     }
 
-    function selectQuizOption(selectedIndex, buttonEl) {
+    function selectQuizOption(selectedIndex) {
+      progress.answers[currentQuizIndex] = {
+        question: triviaQuestions[currentQuizIndex].question,
+        optionIndex: selectedIndex,
+        answer: triviaQuestions[currentQuizIndex].options[selectedIndex]
+      };
+      saveProgress();
+      showQuizSelection(selectedIndex);
+    }
+
+    function showQuizSelection(selectedIndex) {
       const q = triviaQuestions[currentQuizIndex];
       const feedbackBox = document.getElementById('quiz-feedback');
       const nextBtn = document.getElementById('btn-next-quiz');
       const allButtons = document.getElementById('quiz-options').children;
+      const buttonEl = allButtons[selectedIndex];
 
       for (let btn of allButtons) {
         btn.disabled = true;
@@ -801,6 +871,7 @@
     function nextQuizQuestion() {
       if (currentQuizIndex + 1 < triviaQuestions.length) {
         loadQuizQuestion(currentQuizIndex + 1);
+        saveProgress();
       } else {
         nextStep(4);
       }
@@ -857,10 +928,14 @@
     }
 
     function celebrateGrandYES() {
-      // Guardar en la nube (JSON Backend)
-      if (typeof window.saveResponseToCloud === 'function') {
-        window.saveResponseToCloud("Completado 100%");
-      }
+      if (progress.completed) return;
+      progress.completed = true;
+      progress.answer = '¡SÍ, QUIERO!';
+      progress.timestamp = new Date().toISOString();
+      const saved = saveProgress();
+      document.getElementById('save-status-msg').innerText = saved
+        ? '¡Respuesta guardada en el corazón! 💖'
+        : 'No se pudo guardar localmente. Exporta el JSON desde el panel.';
 
       const step5 = document.getElementById('step-5');
       const celebrationScreen = document.getElementById('step-6-celebration');
