@@ -28,3 +28,14 @@ automáticamente un archivo JSON en el disco.
 El token está en el código público y **no protege los datos**. No almacenes
 información sensible en esta página. Los datos anteriormente guardados en
 Firebase no se migran automáticamente.
+
+## Música
+
+La página intenta reproducir la música al abrirse. Algunos navegadores bloquean
+el audio automático hasta que se interactúa con la página; en ese caso, pulsa
+el botón de música para iniciarla.
+
+La pista incluida es «Gymnopedie No. 1», compuesta por Erik Satie y arreglada e
+interpretada por Kevin MacLeod. Fuente:
+[Incompetech](https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100787).
+Licencia: [Creative Commons Atribución 3.0](https://creativecommons.org/licenses/by/3.0/).

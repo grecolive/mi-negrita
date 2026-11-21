@@ -204,6 +204,74 @@
       filter: drop-shadow(0 0 8px rgba(255, 77, 109, 0.6));
     }
 
+    .scrapbook {
+      position: relative;
+      background: #fffaf0;
+      border: 1px solid #f3d9c8;
+      box-shadow: 0 12px 30px rgba(89, 13, 34, 0.12);
+      background-image: repeating-linear-gradient(transparent, transparent 31px, rgba(201, 24, 74, 0.06) 32px);
+    }
+
+    .scrapbook::before {
+      content: '';
+      position: absolute;
+      width: 90px;
+      height: 24px;
+      top: -12px;
+      left: calc(50% - 45px);
+      background: rgba(255, 179, 193, 0.75);
+      transform: rotate(-3deg);
+    }
+
+    .scrapbook-note {
+      background: #fff;
+      border: 1px solid #f5ccd5;
+      box-shadow: 0 5px 12px rgba(89, 13, 34, 0.08);
+    }
+
+    .scrapbook-note:focus-visible {
+      outline: 3px solid #c9184a;
+      outline-offset: 3px;
+    }
+
+    .scrapbook-note[aria-expanded="true"] {
+      background: #fff0f3;
+    }
+
+    .classroom-board {
+      background: #285d50;
+      border: 8px solid #be8f64;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.18), 0 8px 18px rgba(89, 13, 34, 0.15);
+    }
+
+    .paper-heart {
+      display: inline-block;
+      filter: drop-shadow(0 3px 2px rgba(89, 13, 34, 0.2));
+      animation: paper-heart-dance 2.4s ease-in-out infinite alternate;
+    }
+
+    .paper-heart:nth-child(even) {
+      animation-delay: -1.2s;
+    }
+
+    .scrapbook-reveal:not([hidden]) {
+      animation: scrapbook-unfold 0.8s ease-out both;
+    }
+
+    @keyframes paper-heart-dance {
+      from { transform: translateY(0) rotate(-8deg); }
+      to { transform: translateY(-8px) rotate(8deg); }
+    }
+
+    @keyframes scrapbook-unfold {
+      from { opacity: 0; transform: translateY(20px) scale(0.94); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .paper-heart, .scrapbook-reveal:not([hidden]) { animation: none; }
+    }
+
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
@@ -218,17 +286,18 @@
     <button onclick="openAdminModal()" class="glass-card w-10 h-10 rounded-full flex items-center justify-center text-rose-700 shadow-md hover:scale-110 transition-all border border-pink-200 text-xs" title="Panel Admin">
       <i class="fas fa-lock text-sm"></i>
     </button>
-    <button id="audio-toggle" onclick="toggleAudio()" class="glass-card w-12 h-12 rounded-full flex items-center justify-center text-crimsonRed shadow-lg hover:scale-110 transition-all border border-pink-200" title="Música Romántica">
+    <button id="audio-toggle" onclick="toggleAudio()" class="glass-card w-12 h-12 rounded-full flex items-center justify-center text-crimsonRed shadow-lg hover:scale-110 transition-all border border-pink-200" title="Reproducir música" aria-label="Reproducir música" aria-pressed="false">
       <i id="audio-icon" class="fas fa-music text-lg"></i>
     </button>
   </div>
 
-  <audio id="bg-music" loop preload="auto" autoplay>
-    <source src="https://musify.club/track/pl/18169320/victor-manuelle-me-llamare-tuyo.mp3" type="audio/mp3">
+  <audio id="bg-music" loop preload="auto">
+    <source src="audio/gymnopedie-no-1.mp3" type="audio/mpeg">
   </audio>
 
   <!-- CONTENEDOR PRINCIPAL -->
   <main class="relative z-10 max-w-3xl mx-auto px-4 py-6 w-full flex-grow flex flex-col justify-center my-auto">
+    <div id="audio-status" role="status" aria-live="polite" class="hidden mb-4 p-3 rounded-xl bg-amber-100 text-amber-900 text-sm border border-amber-300"></div>
     <div id="storage-status" role="status" aria-live="polite" class="hidden mb-4 p-3 rounded-xl bg-amber-100 text-amber-900 text-sm border border-amber-300"></div>
 
     <!-- ESTADO BLOQUEADO (SI YA RESPONDIÓ) -->
@@ -246,6 +315,9 @@
         <div class="pt-2 text-xs text-rose-700">
           <i class="fas fa-heart"></i> Respuesta guardada en el corazón.
         </div>
+        <button type="button" onclick="revisitCelebration()" class="px-6 py-3 text-sm font-bold text-white bg-gradient-to-r from-deepRose to-crimsonRed rounded-full shadow-md hover:scale-105 transition-all">
+          💌 Volver a nuestra sorpresa
+        </button>
       </div>
     </section>
 
@@ -270,7 +342,7 @@
           Hola, mi princesa hermosha
         </h1>
         <p class="text-slate-700 text-base md:text-lg max-w-md mx-auto leading-relaxed">
-          He preparado un pequeño viaje por nuestra historia y mis sentimientos. ¿Me acompañas a recorrerlo juntos?
+          He preparado un pequeño viaje por nuestra historia y mis sentimientos.<br>¿Me acompañas a recorrerlo juntos?
         </p>
         <div class="pt-4">
           <button onclick="nextStep(2)" class="group inline-flex items-center gap-3 px-8 py-4 font-bold text-white bg-gradient-to-r from-deepRose to-crimsonRed hover:from-crimsonRed hover:to-romanticBurgundy rounded-full shadow-lg hover:shadow-rose-300/60 hover:scale-105 active:scale-95 transition-all duration-300 text-lg">
@@ -464,6 +536,70 @@
           <div class="absolute -bottom-2 -right-2 bg-crimsonRed text-white p-3 rounded-full shadow-lg text-xl">❤️</div>
         </div>
 
+        <div class="scrapbook max-w-lg mx-auto rounded-2xl p-5 sm:p-8 text-rose-900">
+          <div class="text-3xl" aria-hidden="true">✂️ 📚 💌</div>
+          <h2 class="font-romantic text-4xl sm:text-5xl text-crimsonRed mt-3">Un salón lleno de amor</h2>
+          <p class="text-sm sm:text-base mt-3 leading-relaxed">
+            Mi amor, sé cuánto quieres a tus chicos y cuánto corazón pones en tu salón. Por eso preparé esta pequeña manualidad para celebrar a la maestra maravillosa que eres.
+          </p>
+          <div class="classroom-board rounded-xl px-4 py-5 mt-5 text-white">
+            <p class="text-xs font-bold uppercase tracking-wider text-emerald-100">En la pizarra de mi corazón</p>
+            <p class="font-romantic text-3xl sm:text-4xl mt-2">Enseñar también es una forma de amar</p>
+            <div class="text-3xl mt-3" aria-hidden="true">
+              <span class="paper-heart">💗</span> <span class="paper-heart">💛</span> <span class="paper-heart">💚</span> <span class="paper-heart">💙</span> <span class="paper-heart">💜</span>
+            </div>
+          </div>
+          <p class="text-xs font-bold uppercase tracking-wider text-rose-700 mt-5">Abre las cuatro notitas para descubrir tu sorpresa ✨</p>
+          <p id="scrapbook-progress" class="text-xs text-rose-700 mt-2" role="status" aria-live="polite">0 de 4 notitas descubiertas</p>
+          <div class="grid gap-3 mt-4 text-left">
+            <div>
+              <button type="button" class="scrapbook-note w-full rounded-xl px-4 py-3 font-bold text-rose-800 text-left transition-colors" aria-expanded="false" aria-controls="scrapbook-teacher" onclick="openScrapbookNote(this)">
+                🍎 Para la maestra de mi corazón <span aria-hidden="true">↓</span>
+              </button>
+              <div id="scrapbook-teacher" hidden class="px-4 py-3 text-sm leading-relaxed">
+                Admiro la paciencia y el cariño con los que enseñas. Tienes ese don tan bonito de ayudar a otros a crecer, y eso hace que te admire aún más.
+              </div>
+            </div>
+            <div>
+              <button type="button" class="scrapbook-note w-full rounded-xl px-4 py-3 font-bold text-rose-800 text-left transition-colors" aria-expanded="false" aria-controls="scrapbook-classroom" onclick="openScrapbookNote(this)">
+                🧸 Para tus chicos del salón <span aria-hidden="true">↓</span>
+              </button>
+              <div id="scrapbook-classroom" hidden class="px-4 py-3 text-sm leading-relaxed">
+                Me conmueve el amor con el que hablas de tus chicos. Me encanta saber que cada sonrisa, cada pequeño avance y cada ocurrencia suya encuentran un lugar tan grande en tu corazón.
+              </div>
+            </div>
+            <div>
+              <button type="button" class="scrapbook-note w-full rounded-xl px-4 py-3 font-bold text-rose-800 text-left transition-colors" aria-expanded="false" aria-controls="scrapbook-creative" onclick="openScrapbookNote(this)">
+                🎨 Para tus manos creativas <span aria-hidden="true">↓</span>
+              </button>
+              <div id="scrapbook-creative" hidden class="px-4 py-3 text-sm leading-relaxed">
+                Me encanta cómo transformas ideas y pequeños detalles en cosas hermosas. Tu creatividad es otra de las muchas razones por las que eres tan especial para mí.
+              </div>
+            </div>
+            <div>
+              <button type="button" class="scrapbook-note w-full rounded-xl px-4 py-3 font-bold text-rose-800 text-left transition-colors" aria-expanded="false" aria-controls="scrapbook-us" onclick="openScrapbookNote(this)">
+                💖 Para nuestra historia <span aria-hidden="true">↓</span>
+              </button>
+              <div id="scrapbook-us" hidden class="px-4 py-3 text-sm leading-relaxed">
+                Contigo quiero crear recuerdos, celebrar cada pequeño logro y llenar nuestras páginas de risas, abrazos y mucho amor.
+              </div>
+            </div>
+          </div>
+          <div id="scrapbook-surprise" hidden class="scrapbook-reveal mt-5 rounded-xl border-2 border-dashed border-rose-300 bg-white p-5 sm:p-7">
+            <div class="text-4xl" aria-hidden="true">🌼 💐 🌼</div>
+            <p class="text-xs font-bold uppercase tracking-wider text-rose-700 mt-3">Un reconocimiento hecho con todo mi amor</p>
+            <h3 class="font-romantic text-4xl sm:text-5xl text-crimsonRed mt-2">Para la maestra de mi corazón</h3>
+            <p class="text-sm sm:text-base mt-3 leading-relaxed">
+              Por tu paciencia, tu creatividad y el amor inmenso que sientes por tus chicos. La misma ternura que llevas a tu salón también ilumina mi vida.
+            </p>
+            <p class="text-sm sm:text-base mt-3 leading-relaxed font-semibold">
+              Y ahora que dijiste que sí, sueño con seguir creando contigo una historia tan bonita como todo lo que haces con tus manos y tu corazón. Te quiero muchísimo. 💕
+            </p>
+            <img src="images/juntos1.jpg" alt="Un recuerdo de los dos" class="w-36 h-36 object-cover mx-auto mt-5 p-1 bg-white border border-pink-200 shadow-lg rotate-3">
+            <p class="font-romantic text-3xl text-crimsonRed mt-4">Con amor, siempre para ti ❤️</p>
+          </div>
+        </div>
+
         <div class="glass-card p-6 rounded-2xl max-w-md mx-auto space-y-3 border border-pink-200">
           <p class="text-slate-700 text-sm italic font-serif">"Prometo amarte, respetarte y llenarte de detalles bonitos cada día."</p>
           <div class="text-crimsonRed font-bold text-base" id="save-status-msg">Guardando respuesta...</div>
@@ -515,19 +651,19 @@
   <!-- LÓGICA GENERAL DE LA APP -->
   <script>
     const PHOTO_URLS = [
-      "/images/peticion.jpg",
-      "/images/sonrisa.jpg",
-      "/images/juntos.jpg",
-      "/images/juntos1.jpg",
-      "/images/juntos2.jpg",
-      "/images/juntos3.jpg",
-      "/images/juntos4.jpg",
-      "/images/gym.jpg",
-      "/images/firstdate.jpg",
-      "/images/seria.jpg",
-      "/images/tierna.jpg",
-      "/images/ella.jpg",
-      "/images/barbie.jpg"
+      "images/peticion.jpg",
+      "images/sonrisa.jpg",
+      "images/juntos.jpg",
+      "images/juntos1.jpg",
+      "images/juntos2.jpg",
+      "images/juntos3.jpg",
+      "images/juntos4.jpg",
+      "images/gym.jpg",
+      "images/firstdate.jpg",
+      "images/seria.jpg",
+      "images/tierna.jpg",
+      "images/ella.jpg",
+      "images/barbie.jpg"
     ];
 
     const letterMessage = "Desde el día en que nos conocimos, supe que eras alguien increíblemente especial. Tu manera de sonreír, tu voz y la paz que me das cuando estoy contigo no se comparan con nada. Quiero acompañarte en cada sueño, apoyarte y hacerte la mujer más feliz todos los días de mi vida...";
@@ -956,8 +1092,39 @@
       }, 500);
     }
 
+    function revisitCelebration() {
+      document.getElementById('locked-state-view').classList.add('hidden');
+      const celebrationScreen = document.getElementById('step-6-celebration');
+      celebrationScreen.classList.remove('hidden', 'opacity-0', 'scale-90');
+      celebrationScreen.classList.add('scale-100');
+      document.getElementById('save-status-msg').innerText = '¡Respuesta guardada en el corazón! 💖';
+      startMagicalRain();
+    }
+
+    const discoveredScrapbookNotes = new Set();
+    function openScrapbookNote(button) {
+      const isOpen = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', String(!isOpen));
+      document.getElementById(button.getAttribute('aria-controls')).hidden = isOpen;
+
+      const notes = document.querySelectorAll('.scrapbook-note');
+      if (!isOpen) discoveredScrapbookNotes.add(button);
+      const surprise = document.getElementById('scrapbook-surprise');
+      const progressStatus = document.getElementById('scrapbook-progress');
+      if (discoveredScrapbookNotes.size === notes.length) {
+        progressStatus.textContent = '¡Descubriste todas las notitas! Tu sorpresa está aquí debajo. 💖';
+        if (surprise.hidden) {
+          surprise.hidden = false;
+          if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) launchConfettiBurst();
+        }
+      } else {
+        progressStatus.textContent = `${discoveredScrapbookNotes.size} de ${notes.length} notitas descubiertas`;
+      }
+    }
+
     function startMagicalRain() {
       const rainContainer = document.getElementById('magical-rain-container');
+      rainContainer.replaceChildren();
       rainContainer.classList.remove('hidden');
 
       PHOTO_URLS.forEach((url, i) => {
@@ -1065,21 +1232,54 @@
     initParticles();
     animateParticles();
 
-    let isPlaying = false;
-    function toggleAudio() {
-      const audio = document.getElementById('bg-music');
-      const icon = document.getElementById('audio-icon');
+    const audio = document.getElementById('bg-music');
+    const audioIcon = document.getElementById('audio-icon');
+    const audioToggle = document.getElementById('audio-toggle');
+    const audioStatus = document.getElementById('audio-status');
 
-      if (isPlaying) {
-        audio.pause();
-        icon.className = 'fas fa-music text-lg';
-      } else {
-        audio.play().then(() => {
-          icon.className = 'fas fa-volume-up text-lg';
-        }).catch(e => console.log("Audio block: " + e));
-      }
-      isPlaying = !isPlaying;
+    function updateAudioControl() {
+      const playing = !audio.paused && !audio.ended;
+      audioIcon.className = playing ? 'fas fa-volume-up text-lg' : 'fas fa-music text-lg';
+      audioToggle.title = playing ? 'Pausar música' : 'Reproducir música';
+      audioToggle.setAttribute('aria-label', audioToggle.title);
+      audioToggle.setAttribute('aria-pressed', String(playing));
     }
+
+    function showAudioStatus(message) {
+      audioStatus.textContent = message;
+      audioStatus.classList.remove('hidden');
+    }
+
+    function playAudio() {
+      audio.play().catch(error => {
+        updateAudioControl();
+        if (error.name === 'NotAllowedError') {
+          showAudioStatus('El navegador bloqueó la reproducción automática. Toca el botón de música para escucharla.');
+        } else {
+          console.error('No se pudo reproducir la música:', error);
+          showAudioStatus('No se pudo reproducir la música. Comprueba tu conexión e inténtalo de nuevo.');
+        }
+      });
+    }
+
+    function toggleAudio() {
+      if (!audio.paused) {
+        audio.pause();
+      } else {
+        playAudio();
+      }
+    }
+
+    audio.addEventListener('play', updateAudioControl);
+    audio.addEventListener('pause', updateAudioControl);
+    audio.addEventListener('ended', updateAudioControl);
+    audio.addEventListener('playing', () => audioStatus.classList.add('hidden'));
+    audio.addEventListener('error', () => {
+      updateAudioControl();
+      showAudioStatus('No se pudo cargar la música. Comprueba tu conexión e inténtalo de nuevo.');
+    });
+    updateAudioControl();
+    playAudio();
 
     window.openAdminModal = function() {
       document.getElementById('admin-modal').classList.remove('hidden');
