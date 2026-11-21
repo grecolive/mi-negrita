@@ -35,7 +35,8 @@ La página intenta reproducir la música al abrirse. Algunos navegadores bloquea
 el audio automático hasta que se interactúa con la página; en ese caso, pulsa
 el botón de música para iniciarla.
 
-La pista incluida es «Gymnopedie No. 1», compuesta por Erik Satie y arreglada e
-interpretada por Kevin MacLeod. Fuente:
-[Incompetech](https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100787).
-Licencia: [Creative Commons Atribución 3.0](https://creativecommons.org/licenses/by/3.0/).
+La pista incluida es el «Intermezzo Sinfónico» de la ópera *Cavalleria
+Rusticana*, compuesto por Pietro Mascagni (obra de dominio público) e
+interpretado por la Fulda Symphonic Orchestra. Fuente:
+[Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Pietro_Mascagni_-_Cavalleria_Rusticana_-_Intermezzo_Sinfonico.ogg).
+Licencia: [EFF Open Audio License v1.0](https://commons.wikimedia.org/wiki/Commons:Open_Audio_License) (requiere atribución).
